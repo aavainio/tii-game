@@ -34,14 +34,18 @@ def draw_grid():
 def click_mouse():
     global current_number
     pos=pygame.mouse.get_pos()
-    pos = togrid(pos)
+    pos = snap_grid(pos)
     current_number +=1
     num=Number(pos, str(current_number))
     numbers.add(num)
 
-def togrid(pos):
+def snap_grid(pos):
     x,y=pos
     return (x//GRID_SIZE*GRID_SIZE,y//GRID_SIZE*GRID_SIZE)
+
+def togrid(pos):
+    x,y=pos
+    return (x//GRID_SIZE,y//GRID_SIZE)
 
 
 
