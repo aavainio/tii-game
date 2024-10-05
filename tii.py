@@ -4,17 +4,26 @@ import pygame
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 GRID_SIZE = 40
+current_number = 1
+
+
 
 class Number(pygame.sprite.Sprite):
-    def __init__(self,pos):
+    def __init__(self,pos,text):
         super().__init__()
         self.image = pygame.Surface((GRID_SIZE, GRID_SIZE))
+        text_surface = font.render(text,1,(255,255,255))
         self.image.fill((0, 0, 0))
+        self.image.blit(text_surface, (0,5))
         self.rect=self.image.get_rect()
         self.rect.topleft=(pos)
 
+pygame.init()
+screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+font=pygame.font.Font(pygame.font.get_default_font(),36)
+
 numbers=pygame.sprite.Group()
-numbers.add(Number(((15,15))))
+numbers.add(Number((15,15), "1"))
 
 def draw_grid():
     for x in range(0,SCREEN_WIDTH,GRID_SIZE):
@@ -23,9 +32,11 @@ def draw_grid():
         pygame.draw.line(screen, (0,0,0),(0,y),(SCREEN_WIDTH, y))
 
 def click_mouse():
+    global current_number
     pos=pygame.mouse.get_pos()
     pos = togrid(pos)
-    num=Number(pos)
+    current_number +=1
+    num=Number(pos, str(current_number))
     numbers.add(num)
 
 def togrid(pos):
@@ -34,9 +45,6 @@ def togrid(pos):
 
 
 
-pygame.init()
-screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-font=pygame.font.Font(pygame.font.get_default_font(),36)
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
