@@ -1,4 +1,6 @@
 import sys
+import random
+from venv import create
 
 import pygame
 SCREEN_WIDTH = 640
@@ -11,11 +13,11 @@ occupied = []
 
 
 class Number(pygame.sprite.Sprite):
-    def __init__(self,pos,text):
+    def __init__(self,pos,text, bgcolor = (0,0,0)):
         super().__init__()
         self.image = pygame.Surface((GRID_SIZE, GRID_SIZE))
         text_surface = font.render(text,1,(255,255,255))
-        self.image.fill((0, 0, 0))
+        self.image.fill((bgcolor))
         self.image.blit(text_surface, (0,5))
         self.rect=self.image.get_rect()
         self.rect.topleft=(pos)
@@ -72,6 +74,18 @@ def can_put_block(pos):
     if dx==2 and dy==2:
         return True
     return False
+
+def create_obstacles(count):
+    for i in range(count):
+        print(i)
+        x = random.randint(0,15)
+        y = random.randint(0,14)
+        num = Number((x*GRID_SIZE,y*GRID_SIZE), " ", "blue")
+        numbers.add(num)
+        occupied.append((x,y))
+
+
+create_obstacles(5)
 
 
 
