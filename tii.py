@@ -4,7 +4,9 @@ import pygame
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 GRID_SIZE = 40
-current_number = 1
+current_number = 0
+previous_position = None
+occupied = []
 
 
 
@@ -23,7 +25,7 @@ screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 font=pygame.font.Font(pygame.font.get_default_font(),36)
 
 numbers=pygame.sprite.Group()
-numbers.add(Number((15,15), "1"))
+#numbers.add(Number((15,15), "1"))
 
 def draw_grid():
     for x in range(0,SCREEN_WIDTH,GRID_SIZE):
@@ -32,12 +34,18 @@ def draw_grid():
         pygame.draw.line(screen, (0,0,0),(0,y),(SCREEN_WIDTH, y))
 
 def click_mouse():
-    global current_number
+    global current_number, previous_position
     pos=pygame.mouse.get_pos()
+    grid_pos = togrid(pos)
+    if not can_put_block(grid_pos):
+        print("not legal")
+        return
+    previous_position = grid_pos
     pos = snap_grid(pos)
     current_number +=1
     num=Number(pos, str(current_number))
     numbers.add(num)
+    occupied.append(grid_pos)
 
 def snap_grid(pos):
     x,y=pos
@@ -46,6 +54,25 @@ def snap_grid(pos):
 def togrid(pos):
     x,y=pos
     return (x//GRID_SIZE,y//GRID_SIZE)
+
+def can_put_block(pos):
+    if pos in occupied:
+        return False
+    print(pos, previous_position)
+    if previous_position is None:
+        return True
+    x,y = pos
+    px,py = previous_position
+    dx = abs(x-px)
+    dy = abs(y-py)
+    if dx==3 and dy==0:
+        return True
+    if dy==3 and dx==0:
+        return True
+    if dx==2 and dy==2:
+        return True
+    return False
+
 
 
 
