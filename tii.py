@@ -76,16 +76,20 @@ def can_put_block(pos):
     return False
 
 def create_obstacles(count):
-    for i in range(count):
+    i = 0
+    while i < count:
         print(i)
         x = random.randint(0,15)
         y = random.randint(0,14)
+        if (x, y) in occupied:
+            continue
         num = Number((x*GRID_SIZE,y*GRID_SIZE), " ", "blue")
         numbers.add(num)
         occupied.append((x,y))
+        i += 1
 
 
-create_obstacles(5)
+create_obstacles(50)
 
 
 
