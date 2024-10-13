@@ -9,6 +9,7 @@ GRID_SIZE = 40
 current_number = 0
 previous_position = None
 occupied = []
+game_state = "start_menu"
 
 
 
@@ -88,6 +89,16 @@ def create_obstacles(count):
         occupied.append((x,y))
         i += 1
 
+def draw_start_menu():
+    screen.fill((255,255,255))
+    text_surface = font.render("press space to start:", 1, (0,0,0))
+    screen.blit(text_surface, (10,10))
+
+def handle_start_menu():
+    global game_state
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        game_state = "game"
 
 create_obstacles(50)
 
@@ -101,7 +112,12 @@ while True:
             sys.exit()
         if event.type==pygame.MOUSEBUTTONUP:
             click_mouse()
-    screen.fill((255,255,255))
-    draw_grid()
-    numbers.draw(screen)
+    if game_state == "start_menu":
+        draw_start_menu()
+        handle_start_menu()
+
+    elif game_state == "game":
+        screen.fill((255,255,255))
+        draw_grid()
+        numbers.draw(screen)
     pygame.display.flip()
