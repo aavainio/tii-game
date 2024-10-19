@@ -76,18 +76,23 @@ def can_put_block(pos):
         return True
     return False
 
-def create_obstacles(count):
+def create_obstacles(count, color, char):
     i = 0
     while i < count:
         print(i)
-        x = random.randint(0,15)
-        y = random.randint(0,14)
-        if (x, y) in occupied:
-            continue
-        num = Number((x*GRID_SIZE,y*GRID_SIZE), " ", "blue")
+        x,y = get_free_tile()
+        num = Number((x*GRID_SIZE,y*GRID_SIZE), char, color)
         numbers.add(num)
         occupied.append((x,y))
         i += 1
+
+def get_free_tile():
+    while True:
+        x = random.randint(0, 15)
+        y = random.randint(0, 14)
+        if (x, y) in occupied:
+            continue
+        return x,y
 
 def draw_start_menu():
     screen.fill((255,255,255))
@@ -100,7 +105,8 @@ def handle_start_menu():
     if keys[pygame.K_SPACE]:
         game_state = "game"
 
-create_obstacles(50)
+create_obstacles(50, "blue", " ")
+create_obstacles(10, "green", "$")
 
 
 
