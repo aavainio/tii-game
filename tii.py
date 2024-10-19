@@ -114,6 +114,8 @@ def handle_start_menu():
 
 create_obstacles(50, "blue", " ")
 create_obstacles(10, "green", "$")
+start_pos = get_free_tile()
+put_pos(start_pos)
 
 
 
