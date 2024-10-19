@@ -36,19 +36,22 @@ def draw_grid():
     for y in range(0,SCREEN_HEIGHT,GRID_SIZE):
         pygame.draw.line(screen, (0,0,0),(0,y),(SCREEN_WIDTH, y))
 
-def click_mouse():
+def put_pos(grid_pos):
     global current_number, previous_position
-    pos=pygame.mouse.get_pos()
-    grid_pos = togrid(pos)
     if not can_put_block(grid_pos):
         print("not legal")
         return
     previous_position = grid_pos
-    pos = snap_grid(pos)
+    pos = topixel(grid_pos)
     current_number +=1
     num=Number(pos, str(current_number))
     numbers.add(num)
     occupied.append(grid_pos)
+
+def click_mouse():
+    pos = pygame.mouse.get_pos()
+    grid_pos = togrid(pos)
+    put_pos(grid_pos)
 
 def snap_grid(pos):
     x,y=pos
@@ -57,6 +60,10 @@ def snap_grid(pos):
 def togrid(pos):
     x,y=pos
     return (x//GRID_SIZE,y//GRID_SIZE)
+
+def topixel(pos):
+    x,y = pos
+    return (x*GRID_SIZE,y*GRID_SIZE)
 
 def can_put_block(pos):
     if pos in occupied:
