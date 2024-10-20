@@ -13,11 +13,11 @@ tile_types = {}
 game_state = "start_menu"
 score = 0
 MAX_X = SCREEN_WIDTH // GRID_SIZE - 1
-MAX_Y = SCREEN_HEIGHT // GRID_SIZE - 1
+MAX_Y = SCREEN_HEIGHT // GRID_SIZE - 2
 
 
 
-class Number(pygame.sprite.Sprite):
+class TextSprite(pygame.sprite.Sprite):
     def __init__(self,pos,text, bgcolor = (0,0,0)):
         super().__init__()
         self.image = pygame.Surface((GRID_SIZE, GRID_SIZE))
@@ -36,7 +36,7 @@ numbers=pygame.sprite.Group()
 
 def draw_grid():
     for x in range(0,SCREEN_WIDTH,GRID_SIZE):
-        pygame.draw.line(screen, (0,0,0),(x,0),(x,SCREEN_HEIGHT))
+        pygame.draw.line(screen, (0,0,0),(x,0),(x,SCREEN_HEIGHT - GRID_SIZE))
     for y in range(0,SCREEN_HEIGHT,GRID_SIZE):
         pygame.draw.line(screen, (0,0,0),(0,y),(SCREEN_WIDTH, y))
 
@@ -48,9 +48,10 @@ def put_pos(grid_pos):
     previous_position = grid_pos
     pos = topixel(grid_pos)
     current_number +=1
-    num=Number(pos, str(current_number))
+    num=TextSprite(pos, str(current_number))
     numbers.add(num)
     occupied.append(grid_pos)
+    tile_types[grid_pos] = "black"
 
 def click_mouse():
     pos = pygame.mouse.get_pos()
@@ -75,6 +76,8 @@ def can_put_block(pos):
     target_color = tile_types.get(pos)
     if target_color == "blue":
         return False
+    if target_color == "black":
+        return False
     print(pos, previous_position)
     x,y = pos
     px,py = previous_position
@@ -91,12 +94,16 @@ def can_put_block(pos):
         return False
     return True
 
+def draw_score(text):
+    text_surface = font.render(text, 1, (0,0,0))
+    screen.blit(text_surface,(10,100))
+
 def create_obstacles(count, color, char):
     i = 0
     while i < count:
         print(i)
         x,y = get_free_tile()
-        num = Number((x*GRID_SIZE,y*GRID_SIZE), char, color)
+        num = TextSprite((x * GRID_SIZE, y * GRID_SIZE), char, color)
         numbers.add(num)
         occupied.append((x,y))
         tile_types [(x,y)] = color
@@ -146,4 +153,5 @@ while True:
         screen.fill((255,255,255))
         draw_grid()
         numbers.draw(screen)
+        draw_score(f"score:{score}")
     pygame.display.flip()
