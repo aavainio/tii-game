@@ -9,7 +9,11 @@ GRID_SIZE = 40
 current_number = 0
 previous_position = None
 occupied = []
+tile_types = {}
 game_state = "start_menu"
+score = 0
+MAX_X = SCREEN_WIDTH // GRID_SIZE - 1
+MAX_Y = SCREEN_HEIGHT // GRID_SIZE - 1
 
 
 
@@ -66,22 +70,26 @@ def topixel(pos):
     return (x*GRID_SIZE,y*GRID_SIZE)
 
 def can_put_block(pos):
-    if pos in occupied:
-        return False
-    print(pos, previous_position)
     if previous_position is None:
         return True
+    target_color = tile_types.get(pos)
+    if target_color == "blue":
+        return False
+    print(pos, previous_position)
     x,y = pos
     px,py = previous_position
     dx = abs(x-px)
     dy = abs(y-py)
+    ok = False
     if dx==3 and dy==0:
-        return True
+        ok = True
     if dy==3 and dx==0:
-        return True
+        ok = True
     if dx==2 and dy==2:
-        return True
-    return False
+        ok = True
+    if not ok:
+        return False
+    return True
 
 def create_obstacles(count, color, char):
     i = 0
@@ -91,12 +99,13 @@ def create_obstacles(count, color, char):
         num = Number((x*GRID_SIZE,y*GRID_SIZE), char, color)
         numbers.add(num)
         occupied.append((x,y))
+        tile_types [(x,y)] = color
         i += 1
 
 def get_free_tile():
     while True:
-        x = random.randint(0, 15)
-        y = random.randint(0, 14)
+        x = random.randint(0, MAX_X)
+        y = random.randint(0, MAX_Y)
         if (x, y) in occupied:
             continue
         return x,y
@@ -116,6 +125,8 @@ create_obstacles(50, "blue", " ")
 create_obstacles(10, "green", "$")
 start_pos = get_free_tile()
 put_pos(start_pos)
+previous_position = start_pos
+print("starting in", start_pos)
 
 
 
