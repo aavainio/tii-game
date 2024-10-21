@@ -32,7 +32,7 @@ info = pygame.display.Info()
 print(info)
 SCREEN_WIDTH = info.current_w
 SCREEN_HEIGHT = info.current_h
-GRID_SIZE = 40
+GRID_SIZE = SCREEN_HEIGHT//20
 MAX_X = SCREEN_WIDTH // GRID_SIZE - 1
 MAX_Y = SCREEN_HEIGHT // GRID_SIZE - 2
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
@@ -164,7 +164,7 @@ def reset():
     previous_position = None
     occupied = []
     tile_types = {}
-    game_state = "start_menu"
+    game_state = "game"
     score = -10
     create_obstacles(MAX_X * MAX_Y * WATER_PERCENTAGE // 100, "blue", " ")
     create_obstacles(10, "green", "$")
